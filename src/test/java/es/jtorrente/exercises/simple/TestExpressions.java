@@ -23,6 +23,7 @@ public class TestExpressions {
             try {
                 System.out.println("***** TESTING = " + clazz.getName() + " ******");
                 Expressions.Calculator calculator = clazz.newInstance();
+                assertEquals(125, calculator.calculate("2 + 3 + 4*3*5*2"));
                 assertEquals(190, calculator.calculate("3*2*3 + 2*4*3 + 2*2*4 + 5*3*2*5 +2+3+1-5-6-7-8+2"));
                 assertEquals(61, calculator.calculate("3 + 4*3*5 - 2"));
                 assertEquals(5, calculator.calculate("2+3"));
@@ -33,5 +34,13 @@ public class TestExpressions {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Test
+    public void testParenthesis(){
+        Expressions.Calculator calculator = new Expressions.CalculatorOneStack();
+        assertEquals(20,calculator.calculate("(3+2)*(5-1)"));
+        assertEquals(12,calculator.calculate("3+2*5-1"));
+        assertEquals(106,calculator.calculate("(3+2*(12-7)*5)*2"));
     }
 }

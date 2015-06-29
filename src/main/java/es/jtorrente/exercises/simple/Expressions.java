@@ -11,6 +11,7 @@ import java.util.Stack;
  * 3+3*4*5*6
  *
  * Assumptions:
+ * (0) Expressions are well formed (e.g. 3* will not happen)
  * (1) Brackets are not allowed
  * (2) Supported operators: +,-,*
  * (3) + and - operators have the same priority
@@ -29,6 +30,10 @@ import java.util.Stack;
  * The solution using a tree is clearly the worst in terms of memory efficiency, as it needs to store three
  * pointers per node in the tree. The benefit of this approach is that it would be easier to extend with new
  * functionality (e.g. brackets)
+ *
+ * Follow-up: A classic follow-up would involve how to implement parenthesis to alter the priority of operations.
+ * A typical implementation would involve using a stack of stacks. This sort of implementation is provided in
+ * {@link es.jtorrente.exercises.simple.Expressions.CalculatorOneStack}
  *
  * Created by jtorrente on 29/06/2015.
  */
@@ -147,7 +152,12 @@ public class Expressions {
     }
 
     /**
-     * IMPLEMENTATION USING ONE STACK FOR BOTH OPERATIONS AND OPERANDS
+     * IMPLEMENTATION USING ONE STACK FOR BOTH OPERATIONS AND OPERANDS.
+     *
+     * Includes follow up: introduce "parenthesis". The solution is to use a stack
+     * of stacks. When you read ( you push a new stack in the stack of stacks.
+     * When you read ) you make that calculation, pop the current stack and push
+     * the resulting value into the stack that is currently at the peek.
      */
     public static class CalculatorOneStack implements  Calculator{
 
@@ -174,13 +184,27 @@ public class Expressions {
             // Clean all whites
             expression = expression.replaceAll("\\s", "");
             // Initialize stacks and variables
-            Stack<OperandOperator> operandOperators = new Stack<>();
+            Stack<Stack<OperandOperator>> stackOfOperandOperators = new Stack<>();
+            stackOfOperandOperators.push(new Stack<>());
+            Stack<OperandOperator> operandOperators = stackOfOperandOperators.peek();
             int currentOperand = 0;
 
             for (int i=0; i<expression.length(); i++){
                 char currentChar = expression.charAt(i);
+                // Open parenthesis
+                if (currentChar == '('){
+                    stackOfOperandOperators.push(new Stack<>());
+                    operandOperators = stackOfOperandOperators.peek();
+                }
+                // Close parenthesis
+                else if (currentChar == ')'){
+                    stackOfOperandOperators.pop();
+                    operandOperators.push(new Operand(currentOperand));
+                    currentOperand = makeLastOperation(operandOperators);
+                    operandOperators = stackOfOperandOperators.peek();
+                }
                 // Build operand
-                if (Character.isDigit(currentChar)){
+                else if (Character.isDigit(currentChar)){
                     currentOperand = buildOperand(currentOperand, currentChar);
                 }
                 // Operator
@@ -201,9 +225,18 @@ public class Expressions {
                 }
             }
             // Make last operation and return
-            char operator = ((Operator)operandOperators.pop()).operator;
-            int leftOperand = ((Operand)operandOperators.pop()).value;
-            return makeOperation(currentOperand, leftOperand, operator);
+            operandOperators.push(new Operand(currentOperand));
+            return makeLastOperation(operandOperators);
+        }
+
+        private int makeLastOperation(Stack<OperandOperator> operandOperators){
+            while (operandOperators.size()>=3) {
+                int rightOperand = ((Operand) operandOperators.pop()).value;
+                char operator = ((Operator) operandOperators.pop()).operator;
+                int leftOperand = ((Operand) operandOperators.pop()).value;
+                operandOperators.push(new Operand(makeOperation(rightOperand, leftOperand, operator)));
+            }
+            return ((Operand)operandOperators.pop()).value;
         }
     }
 
@@ -243,7 +276,15 @@ public class Expressions {
             }
             // Make last operation and return
             operands.push(currentOperand);
-            return makeOperation(operands.pop(), operands.pop(), operators.pop());
+            //return makeOperation(operands.pop(), operands.pop(), operators.pop());
+            return makeLastOperation(operands, operators);
+        }
+
+        private int makeLastOperation(Stack<Integer> operands, Stack<Character> operators){
+            while (!operators.isEmpty()){
+                operands.push(makeOperation(operands.pop(), operands.pop(), operators.pop()));
+            }
+            return operands.pop();
         }
     }
 
