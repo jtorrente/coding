@@ -38,15 +38,28 @@ public class TreeNodeTraversal {
         }
     }
 
+    public static void doPostorderTraversal3(List<Integer> list, TreeNode root){
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode c = root;
+        while (!stack.isEmpty() || c!=null){
+            if (c!=null){
+                stack.push(c);
+                c = c.left;
+            } else {
+                TreeNode t = stack.pop();
+                list.add(t.val);
+                if (!stack.empty() && stack.peek().left == t){
+                    c = stack.peek().right;
+                }
+            }
+        }
+    }
+
     /*
                                   1
                    2                            3
              4            5            6                7
          8      9     10    11      12   13           14   15
-
-         8 9 4 10 11 5 2 12 13 6 14 15 7 3 1
-         1 3 7 15 14 6 13 12 2 5 11 10 4 9 8
-
 
 
      */

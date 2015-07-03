@@ -77,6 +77,10 @@ public class TestTreeNodeTraversal {
         List<Integer> results2 = new ArrayList<>();
         TreeNodeTraversal.doPostorderTraversal2(results2, buildTree);
         check(results2, expected);
+
+        List<Integer> results3 = new ArrayList<>();
+        TreeNodeTraversal.doPostorderTraversal3(results3, buildTree);
+        check(results3, expected);
     }
 
     private void check(List<Integer> results, int[] expected){
