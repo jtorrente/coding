@@ -11,11 +11,16 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by jtorrente on 04/07/2015.
  */
-public class TestGraphAdjacencyMatrix {
+public class TestGraphs {
 
     @Test
-    public void test(){
-        GraphAdjacencyMatrix<Integer> graph = new GraphAdjacencyMatrix<>(5);
+    public void testAllTypes(){
+        testType(GraphAdjacencyList.class);
+        testType(GraphAdjacencyMatrix.class);
+    }
+
+    public void testType(Class<? extends Graph> clazz){
+        Graph<Integer> graph = clazz == GraphAdjacencyList.class? new GraphAdjacencyList<>():new GraphAdjacencyMatrix<>(5);
         graph.addEdge(1, 2, false);
         graph.addEdge(1, 3, false);
         graph.addVertex(4);

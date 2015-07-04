@@ -6,12 +6,9 @@ package es.jtorrente.datastructures.graphs;
 public interface Graph<T> {
 
     boolean addVertex(T content);
-    boolean addVertex(GraphNode vertex);
 
     boolean addEdge(T content1, T content2, boolean directed, boolean isWeighted, int weight, String label);
-    boolean addEdge(GraphNode vertex1, GraphNode vertex2, boolean directed, boolean isWeighted, int weight, String label);
     boolean addEdge(T content1, T content2, boolean directed);
-    boolean addEdge(GraphNode vertex1, GraphNode vertex2, boolean directed);
 
     int nVertices();
 
@@ -23,11 +20,8 @@ public interface Graph<T> {
     Iterable<Edge<T>> edges(T vertex);
 
     int degree(T content);
-    int degree(GraphNode vertex);
 
     boolean hasVertex(T content);
-    boolean hasVertex(GraphNode vertex);
 
     boolean hasEdge(T content1, T content2);
-    boolean hasEdge(GraphNode vertex1, GraphNode vertex2);
 }

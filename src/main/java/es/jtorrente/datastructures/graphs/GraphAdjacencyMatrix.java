@@ -36,12 +36,6 @@ public class GraphAdjacencyMatrix<T> implements Graph<T>{
     }
 
     @Override
-    public boolean addVertex(GraphNode vertex) {
-        // Not implemented
-        return false;
-    }
-
-    @Override
     public boolean addEdge(T content1, T content2, boolean directed, boolean isWeighted, int weight, String label) {
         boolean added = false;
         checkElementAssignedIndex(content1);
@@ -61,20 +55,8 @@ public class GraphAdjacencyMatrix<T> implements Graph<T>{
     }
 
     @Override
-    public boolean addEdge(GraphNode vertex1, GraphNode vertex2, boolean directed, boolean isWeighted, int weight, String label) {
-        // Not implemented
-        return false;
-    }
-
-    @Override
     public boolean addEdge(T content1, T content2, boolean directed) {
         return addEdge(content1, content2, directed, false, -1, null);
-    }
-
-    @Override
-    public boolean addEdge(GraphNode vertex1, GraphNode vertex2, boolean directed) {
-        // Not implemented
-        return false;
     }
 
     private boolean checkElementAssignedIndex(T content){
@@ -167,20 +149,8 @@ public class GraphAdjacencyMatrix<T> implements Graph<T>{
     }
 
     @Override
-    public int degree(GraphNode vertex) {
-        // Not implemented
-        return 0;
-    }
-
-    @Override
     public boolean hasVertex(T content) {
         return indices.containsKey(content);
-    }
-
-    @Override
-    public boolean hasVertex(GraphNode vertex) {
-        // Not implemented
-        return false;
     }
 
     @Override
@@ -190,12 +160,6 @@ public class GraphAdjacencyMatrix<T> implements Graph<T>{
         int i1=indices.get(content1);
         int i2=indices.get(content2);
         return adjMatrix[i1][i2].weight!=Integer.MIN_VALUE;
-    }
-
-    @Override
-    public boolean hasEdge(GraphNode vertex1, GraphNode vertex2) {
-        // Not implemented
-        return false;
     }
 
     private static class InternalEdge {
