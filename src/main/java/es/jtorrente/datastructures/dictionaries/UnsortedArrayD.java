@@ -16,6 +16,18 @@ public class UnsortedArrayD<K extends Comparable, T> extends BaseArrayD<K,T>{
         }
     }
 
+    private void updateMinMax(){
+        min = max = null;
+        for (int i=0; i<size; i++){
+            if (min==null || min.key.compareTo(elements[i].key)>0){
+                min = elements[i];
+            }
+            if (max==null || max.key.compareTo(elements[i].key)<0){
+                max = elements[i];
+            }
+        }
+    }
+
     @Override
     public Entry<K, T> search(K key) {
         int index=indexOf(key);
@@ -34,8 +46,12 @@ public class UnsortedArrayD<K extends Comparable, T> extends BaseArrayD<K,T>{
 
     @Override
     public void delete(int index) {
-        if (index>=0){
+        if (checkRange(index)){
+            Entry<K,T> elemDeleted = elements[index];
             elements[index]=elements[--size];
+            if (elemDeleted == min || elemDeleted == max) {
+                updateMinMax();
+            }
         }
     }
 
