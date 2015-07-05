@@ -1,9 +1,9 @@
 package es.jtorrente.datastructures.dictionaries;
 
-import junit.framework.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -14,26 +14,33 @@ import static org.junit.Assert.assertNull;
  */
 public class TestDictionaries {
 
+    private HashMap<Integer, Dictionary.Entry<Integer, String>> entries;
+
     @Test
     public void test(){
         testDictionary(UnsortedArrayD.class);
         testDictionary(SortedArrayD.class);
         testDictionary(UnsortedSinglyListD.class);
+        testDictionary(UnsortedDoubleListD.class);
+        testDictionary(SortedSinglyListD.class);
+        testDictionary(SortedDoubleListD.class);
     }
 
     private void testDictionary(Class<? extends Dictionary> clazz){
+        entries =  new HashMap<>();
         int []expectedOrder = {1,2,4,6};
 
-        boolean l = !clazz.isAssignableFrom(BaseArrayD.class);
+        boolean l = BaseListD.class.isAssignableFrom(clazz);
+        boolean d = clazz == UnsortedDoubleListD.class || clazz == SortedDoubleListD.class;
         Dictionary<Integer, String> dic = buildDictionary(clazz);
         assertNull(dic.min());
         assertNull(dic.max());
-        dic.insert(e(5,l));
-        dic.insert(e(4,l));
-        dic.delete(e(5,l));
-        dic.insert(e(2,l));
-        dic.insert(e(6,l));
-        dic.insert(e(1,l));
+        dic.insert(e(5,l,d));
+        dic.insert(e(4,l,d));
+        dic.delete(e(5,l,d));
+        dic.insert(e(2,l,d));
+        dic.insert(e(6,l,d));
+        dic.insert(e(1,l,d));
         assertNull(dic.search(5));
         assertNull(dic.search(-1));
         assertEquals("4", dic.search(4).value);
@@ -73,15 +80,23 @@ public class TestDictionaries {
         return null;
     }
 
-    private Dictionary.Entry<Integer, String> e(int n, boolean list){
+    private Dictionary.Entry<Integer, String> e(int n, boolean list, boolean isDouble){
+        if (entries.containsKey(n)){
+            return entries.get(n);
+        }
         Dictionary.Entry<Integer,String> entry;
         if (list){
-            entry = new UnsortedSinglyListD.EntryNode<>();
+            if (!isDouble) {
+                entry = new BaseListD.EntryNode<>();
+            } else {
+                entry = new BaseListD.EntryDNode<>();
+            }
         } else {
             entry = new Dictionary.Entry<>();
         }
         entry.key = n;
         entry.value = ""+n;
+        entries.put(n, entry);
         return entry;
     }
 }
