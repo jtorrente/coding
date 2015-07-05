@@ -17,6 +17,7 @@ public class TestGraphs {
     public void testAllTypes(){
         testType(GraphAdjacencyList.class);
         testType(GraphAdjacencyMatrix.class);
+        testType(GraphNodes.class);
     }
 
     public void testType(Class<? extends Graph> clazz){
