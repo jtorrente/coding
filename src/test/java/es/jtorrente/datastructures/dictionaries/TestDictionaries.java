@@ -18,20 +18,22 @@ public class TestDictionaries {
     public void test(){
         testDictionary(UnsortedArrayD.class);
         testDictionary(SortedArrayD.class);
+        testDictionary(UnsortedSinglyListD.class);
     }
 
     private void testDictionary(Class<? extends Dictionary> clazz){
         int []expectedOrder = {1,2,4,6};
 
+        boolean l = !clazz.isAssignableFrom(BaseArrayD.class);
         Dictionary<Integer, String> dic = buildDictionary(clazz);
         assertNull(dic.min());
         assertNull(dic.max());
-        dic.insert(e(5));
-        dic.insert(e(4));
-        dic.delete(e(5));
-        dic.insert(e(2));
-        dic.insert(e(6));
-        dic.insert(e(1));
+        dic.insert(e(5,l));
+        dic.insert(e(4,l));
+        dic.delete(e(5,l));
+        dic.insert(e(2,l));
+        dic.insert(e(6,l));
+        dic.insert(e(1,l));
         assertNull(dic.search(5));
         assertNull(dic.search(-1));
         assertEquals("4", dic.search(4).value);
@@ -71,8 +73,13 @@ public class TestDictionaries {
         return null;
     }
 
-    private Dictionary.Entry<Integer, String> e(int n){
-        Dictionary.Entry<Integer,String> entry = new Dictionary.Entry<>();
+    private Dictionary.Entry<Integer, String> e(int n, boolean list){
+        Dictionary.Entry<Integer,String> entry;
+        if (list){
+            entry = new UnsortedSinglyListD.EntryNode<>();
+        } else {
+            entry = new Dictionary.Entry<>();
+        }
         entry.key = n;
         entry.value = ""+n;
         return entry;
