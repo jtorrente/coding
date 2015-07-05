@@ -47,6 +47,9 @@ public class TestGraphs {
         // Test Breadth-first search
         int[] expectedOrder = {1,2,3,4,6,5,7};
         checkBreadthFirstSearch(graph, expectedOrder);
+        // Depth-first search
+        int[] expectedOrder2 = {1,2,4,5,7,6,3};
+        checkDepthFirstSearch(graph, expectedOrder2);
     }
 
     private void checkBreadthFirstSearch(Graph<Integer> graph, int[]expectedOrder){
@@ -56,5 +59,18 @@ public class TestGraphs {
         });
         // Check elements are equals
         assertTrue(Arrays.equals(results, expectedOrder));
+    }
+
+    private void checkDepthFirstSearch(Graph<Integer> graph, int[]expectedOrder){
+        int[] results = new int[expectedOrder.length];
+        int[] results2 = new int[expectedOrder.length];
+        int[] current = {0,0};
+        GraphTraversal.depthFirstTraversalRecursive(graph, vertex -> results[current[0]++]=vertex, edge -> {
+        });
+        GraphTraversal.depthFirstTraversalIterative(graph, vertex -> results2[current[1]++] = vertex, edge -> {
+        });
+        // Check elements are equals
+        assertTrue(Arrays.equals(results, expectedOrder));
+        assertTrue(Arrays.equals(results2, expectedOrder));
     }
 }

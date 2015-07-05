@@ -5,6 +5,7 @@ import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
 public class GraphTraversal {
 
@@ -13,8 +14,83 @@ public class GraphTraversal {
         T parent = null;
     }
 
-    private static enum VertexState{
-        DISCOVERED, PROCESSED;
+    private static class VertexInfoDFS<T> extends VertexInfo<T>{
+        int entryTime;
+        int exitTime;
+    }
+
+    private enum VertexState{
+        DISCOVERED, PROCESSED
+    }
+
+    public static <T> void depthFirstTraversalIterative(Graph<T> graph, VertexProcessor<T> vertexProcessor, EdgeProcessor edgeProcessor){
+        HashMap<T, VertexInfoDFS<T>> states = new HashMap<>();
+        Iterable<T> vertices = graph.vertices();
+        Stack<T> pendingVertices = new Stack<>();
+        Stack<T> localStack=new Stack<>();
+        pendingVertices.push(vertices.iterator().next());
+        VertexInfoDFS<T> info = new VertexInfoDFS<>();
+        int time=0;
+        info.entryTime=time;
+        info.parent = null;
+        info.state = VertexState.DISCOVERED;
+        states.put(pendingVertices.peek(), info);
+
+        while(!pendingVertices.empty()){
+            T current = pendingVertices.pop();
+            time++;
+            vertexProcessor.process(current);
+            states.get(current).state = VertexState.PROCESSED;
+            for (Edge<T> edge: graph.edges(current)) {
+                if (!states.containsKey(edge.to)) {
+                    edgeProcessor.process(edge);
+                    VertexInfoDFS<T> info2 = new VertexInfoDFS<>();
+                    info2.entryTime = time;
+                    info2.parent = current;
+                    info2.state = VertexState.DISCOVERED;
+                    states.put(edge.to, info2);
+                    localStack.push(edge.to);
+                }
+            }
+            while(!localStack.empty()){
+                pendingVertices.push(localStack.pop());
+            }
+            time++;
+            states.get(current).exitTime=time;
+        }
+    }
+
+    public static <T> void depthFirstTraversalRecursive(Graph<T> graph, VertexProcessor<T> vertexProcessor, EdgeProcessor edgeProcessor){
+        T currentNode = graph.vertices().iterator().next();
+        HashMap<T, VertexInfoDFS<T>> states = new HashMap<>();
+        int time=0;
+        VertexInfoDFS<T> newInfo = new VertexInfoDFS<>();
+        newInfo.parent = null;
+        newInfo.entryTime = time;
+        states.put(currentNode, newInfo);
+        depthFirstTraversalRecursiveInternal(graph, currentNode, states, time, vertexProcessor, edgeProcessor);
+    }
+
+    private static <T> int depthFirstTraversalRecursiveInternal(Graph<T> graph, T currentNode, HashMap<T, VertexInfoDFS<T>> states, int time, VertexProcessor<T> vertexProcessor, EdgeProcessor edgeProcessor){
+        VertexInfoDFS<T> info = states.get(currentNode);
+        vertexProcessor.process(currentNode);
+        info.state = VertexState.PROCESSED;
+        time++;
+
+        for (Edge<T> edge: graph.edges(currentNode)){
+            if (states.get(edge.to)==null){
+                edgeProcessor.process(edge);
+                VertexInfoDFS<T> newInfo = new VertexInfoDFS<>();
+                newInfo.parent = currentNode;
+                newInfo.entryTime = time;
+                states.put(edge.to, newInfo);
+                time = depthFirstTraversalRecursiveInternal(graph, edge.to, states, time, vertexProcessor, edgeProcessor);
+            }
+        }
+
+        info.exitTime = time;
+        time++;
+        return time;
     }
 
     public static <T> void breadthFirstTraversal(Graph<T> graph, VertexProcessor<T> vertexProcessor, EdgeProcessor edgeProcessor){
