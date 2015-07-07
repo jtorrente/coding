@@ -32,6 +32,9 @@ public class TestOperators {
         int a = 0b111000;
         int b = 0b000111;
         int c = 0b110011;
+        System.out.println(Integer.MIN_VALUE>>31);
+        System.out.println(~0);
+        System.out.println(~1);
         assertEquals(56, a);
         assertEquals(7, b);
         // Bitwise or operation
