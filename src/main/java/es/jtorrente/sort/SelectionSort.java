@@ -1,4 +1,4 @@
-package es.jtorrente.es.jtorrente.sort;
+package es.jtorrente.sort;
 
 /**
  * Cost: n^2

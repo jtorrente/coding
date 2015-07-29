@@ -1,4 +1,4 @@
-package es.jtorrente.es.jtorrente.sort;
+package es.jtorrente.sort;
 
 import org.junit.Test;
 
@@ -13,7 +13,7 @@ public class SortTest {
 
     private static int N = 100000;
     //private static int N = 10;
-    private static final SortAlgorithm[] algorithms = {new MergeSortConcurrent(), new InsertionSort(), new HeapSort(), new SelectionSort(), new RadixSort(100), new QuickSort(), new MergeSort()};
+    private static final SortAlgorithm[] algorithms = {new MergeSortConcurrent(), new RadixConcurrent(100), new InsertionSort(), new HeapSort(), new SelectionSort(), new RadixSort(100), new QuickSort(), new MergeSort()};
 
     private static class AlgorithmRunningTime {
         String algorithmName;

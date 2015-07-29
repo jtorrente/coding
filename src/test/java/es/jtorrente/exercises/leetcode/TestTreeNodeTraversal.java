@@ -1,4 +1,4 @@
-package es.jtorrente.es.jtorrente.exercises.leetcode;
+package es.jtorrente.exercises.leetcode;
 
 import es.jtorrente.exercises.leetcode.TreeNodeTraversal;
 import org.junit.Test;

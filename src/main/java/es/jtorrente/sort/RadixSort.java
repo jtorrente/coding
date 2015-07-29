@@ -1,4 +1,4 @@
-package es.jtorrente.es.jtorrente.sort;
+package es.jtorrente.sort;
 
 /**
  * Created by jtorrente on 11/07/2015.

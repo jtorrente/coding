@@ -1,4 +1,4 @@
-package es.jtorrente.es.jtorrente.sort;
+package es.jtorrente.sort;
 
 import java.util.Arrays;
 
