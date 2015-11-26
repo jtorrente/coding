@@ -26,4 +26,8 @@ public class Edge<T> {
         AUTO_ID++;
         this.to = to;
     }
+
+    public T getTo(){
+        return to;
+    }
 }

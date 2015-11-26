@@ -62,6 +62,7 @@ public class GraphNodes<T> implements Graph<T>{
             }
             newEdge.label = label;
             nEdges++;
+            node1.edges.add(newEdge);
             added = true;
         }
 
